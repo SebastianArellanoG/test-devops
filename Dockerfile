@@ -3,7 +3,7 @@
 ARG PYTHON_VERSION=3.12.4
 
 
-FROM python:${PYTHON_VERSION}-alpine as base
+FROM python:${PYTHON_VERSION}-alpine AS base
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -29,6 +29,9 @@ RUN adduser \
 
 RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers bash
 
+# Crear y activar un entorno virtual
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.txt requirements.txt
 
