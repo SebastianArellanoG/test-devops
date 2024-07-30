@@ -26,19 +26,20 @@ RUN adduser \
     appuser
 
 
-#
-RUN  apk add gcc python3-dev musl-dev linux-headers
+
+RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers bash
+
 RUN  pip install --no-binary :all: psutil
 
-# Copia el archivo de requerimientos y las dependencias
 COPY requirements.txt requirements.txt
-RUN python -m pip install --no-cache-dir -r requirements.txt
-# Switch to the non-privileged user to run the application.
-USER appuser
 
-# Copy the source code into the container.
+RUN python -m pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
+RUN chown -R appuser:appuser /app
+# Switch to the non-privileged user to run the application.
+USER appuser
 # Expose the port that the application listens on.
 EXPOSE 8000
 
