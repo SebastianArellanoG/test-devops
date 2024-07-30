@@ -29,12 +29,17 @@ RUN adduser \
 
 RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers bash
 
-RUN  pip install --no-binary :all: psutil
 
 COPY requirements.txt requirements.txt
 
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
+
+# Copiar el archivo de requisitos
+COPY requirements.txt requirements.txt
+
+# Instalar las dependencias del archivo de requisitos
+RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN chown -R appuser:appuser /app
