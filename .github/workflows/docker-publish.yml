@@ -4,6 +4,7 @@ name: Build and Unit Test
 on:
   push:
     branches:
+      - master
       - test
   pull_request:
 
@@ -29,15 +30,15 @@ jobs:
         with:
           push: false
           load: true # Export to Docker Engine rather than pushing to a registry
-          tags: ${{ github.run_id }}
+          tags: ${{github.run_id}}
           target: test
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
-      # - name: Unit Testing in Docker
-      #   run: |
-      #     docker compose -f docker-compose.test.yml up --exit-code-from tests
+      - name: Unit Testing in Docker
+        run: |
+          docker run --rm ${{ github.run_id}} /bin/bash -c "pytest -p no:warnings"
 
       - name: Docker Metadata for Final Image Build
         id: docker_meta

@@ -49,8 +49,6 @@ USER appuser
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-# Run the application.
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000",  "--timeout", "120", "app:app"]
 
 FROM base AS final
 
