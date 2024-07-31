@@ -26,16 +26,34 @@ RUN adduser \
     appuser
 
 
+FROM base AS test
 
-RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers bash
+RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers bash curl
 
 # Crear y activar un entorno virtual
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+
+# Copiar el archivo de requisitos
 COPY requirements.txt requirements.txt
 
-RUN python -m pip install --no-cache-dir -r requirements.txt
+# Instalar las dependencias del archivo de requisitos
+RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir pytest==8.3.2
+COPY . .
+
+RUN chown -R appuser:appuser /app
+# Switch to the non-privileged user to run the application.
+USER appuser
+# Expose the port that the application listens on.
+EXPOSE 8000
+
+
+FROM base AS final
+
+
+RUN  apk add --no-cache  gcc python3-dev musl-dev linux-headers
 
 
 # Copiar el archivo de requisitos
@@ -45,8 +63,6 @@ COPY requirements.txt requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
-RUN chown -R appuser:appuser /app
-# Switch to the non-privileged user to run the application.
 USER appuser
 # Expose the port that the application listens on.
 EXPOSE 8000
