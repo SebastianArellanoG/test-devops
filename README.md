@@ -17,7 +17,7 @@ git clone git@github.com:SebastianArellanoG/test-devops-junior.git
 ```
 
 ```bash
-cd test-devops-junior
+cd test-devops
 ```
 
 ## Deploy con Dockerfile
